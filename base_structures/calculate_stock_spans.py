@@ -1,19 +1,22 @@
-def validate_pushed_popped(pushed: list, popped: list) -> bool:
-    stack_in = []
-    stack_out = []
-    for i in range(len(pushed)):
-        stack_in.append(pushed[i])
-        while len(stack_in) > 0 and stack_in[len(stack_in) - 1] == popped[len(stack_out)]:
-            el = stack_in.pop()
-            stack_out.append(el)
-    return stack_out == popped
+def calculate_stock_spans(prices: list) -> list:
+    answer = [0] * len(prices)
+    prices_stack = [prices[0]]
+    days_stack = [1]
+    for _, price in enumerate(prices):
+        tmp_days = 1
+        while len(prices_stack) > 0 and price >= prices_stack[-1]:
+            prices_stack.pop()
+            tmp_days = tmp_days + days_stack.pop()
+        prices_stack.append(price)
+        days_stack.append(tmp_days)
+        answer.append(tmp_days)
+    return answer
 
 
 def solution():
-    pushed = list(map(int, input().split()))
-    popped = list(map(int, input().split()))
-    result = validate_pushed_popped(pushed, popped)
-    print(result)
+    prices = list(map(int, input().split()))
+    spans = calculate_stock_spans(prices)
+    print(' '.join(map(str, spans)))
 
 
 solution()
